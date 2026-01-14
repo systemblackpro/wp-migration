@@ -6,9 +6,10 @@ git clone https://github.com/systemblackpro/wp-migration.git
 
 cd wp-migration
 
+chmod +x wp-migration-backup.sh
+
 read -p "Ingresa nombre de cPanel: name_cpanel"
 
 echo "El Nombre de cPanel es: $name_cpanel"
 
-chmod +x wp-migration-backup.sh
 ./wp-migration-backup.sh
