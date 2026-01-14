@@ -4,7 +4,9 @@ echo "[INFO] Clonando repositorio..."
 
 git clone https://github.com/systemblackpro/wp-migration.git
 
-cd wp-migration 
+cd ..
+echo "Directorio actual:"
+pwd
 
 chmod +x wp-migration-backup.sh
 
