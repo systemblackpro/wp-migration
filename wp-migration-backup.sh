@@ -28,6 +28,7 @@ fi
 # Directorio de trabajo (cambia esto si es necesario)
 CURRENT_PATH="$(pwd)"
 
+perms   "$CURRENT_PATH" 
 WP_PATH="$CURRENT_PATH"
 
 # Verificar si el directorio de WordPress existe
@@ -134,8 +135,8 @@ while true; do
             print_message "Listando backups existentes..."
             echo ""
             echo "--- Backups de All-in-One WP Migration ---"
-            if [ -d "$WP_PATH/wp-content/ai1wm-backups" ]; then
-                ls -lh "$WP_PATH/wp-content/ai1wm-backups/"
+            if [ -d "/wp-content/ai1wm-backups" ]; then
+                ls -lh "/wp-content/ai1wm-backups/"
             else
                 print_warning "No se encontraron backups de All-in-One WP Migration"
             fi
@@ -177,6 +178,9 @@ while true; do
         
         6)
             print_message "Saliendo..."
+            cd ..
+            rm -f wp-migration
+            
             exit 0
             ;;
         
