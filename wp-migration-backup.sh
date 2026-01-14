@@ -25,6 +25,10 @@ if ! command -v wp &> /dev/null; then
     exit 1
 fi
 
+git clone https://github.com/systemblackpro/wp-migration.git
+
+cd wp-migration
+
 
 # Variables cPanel
 read -p "Ingresa nombre de cPanel: " name_cpanel
