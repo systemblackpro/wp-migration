@@ -193,7 +193,7 @@ while true; do
             
             perms $name_cpanel
 
-            echo "Permiso Activos"           
+            echo "✓ Permiso Activos"           
             rm -rf wp-migration
             
             exit 0
