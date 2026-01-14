@@ -2,6 +2,12 @@
 
 echo "[INFO] Clonando repositorio..."
 
+read -r -p "Ingresa el nombre del cPanel (ej: dragon): " name-cpanel
+
+echo "cPanel actual: $name-cpanel"
+
+read -r -p "Ingresa el nombre del dominio (ej: midominio.com): " dominio
+
 git clone https://github.com/systemblackpro/wp-migration.git
 
 cd /home/$name-cpanel/$dominio/wp-migration
