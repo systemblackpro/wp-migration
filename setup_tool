@@ -4,7 +4,8 @@ echo "[INFO] Clonando repositorio..."
 
 git clone https://github.com/systemblackpro/wp-migration.git
 
-cd ..
+cd /home/$name-cpanel/$dominio/wp-migration
+
 echo "Directorio actual:"
 pwd
 
