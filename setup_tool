@@ -2,38 +2,19 @@
 
 echo "[INFO] Clonando repositorio..."
 
-read -r -p "Ingresa el nombre del cPanel (ej: dragon): " name-cpanel
+read -r -p "Ingresa el nombre del cPanel (ej: dragon): " name_cpanel
 
-echo "cPanel actual: $name-cpanel"
+echo "cPanel actual: $name_cpanel"
 
 read -r -p "Ingresa el nombre del dominio (ej: midominio.com): " dominio
 
 git clone https://github.com/systemblackpro/wp-migration.git
 
-cd /home/$name-cpanel/$dominio/wp-migration
+cd "/home/$name_cpanel/$dominio/wp-migration" || {
+    echo "[ERROR] No se pudo acceder al directorio"
+    exit 1
+}
 
 echo "Directorio actual:"
 pwd
 
-chmod +x wp-migration-backup.sh
-
-# Variables cPanel
-read -p "Ingresa nombre de cPanel: " name_cpanel
-
-if [ -z "$name_cpanel" ]; then
-    echo "El nombre de usuario no puede estar vacío"
-    exit 1
-fi
-
-echo "Name cPanel es: $name_cpanel"
-
-# Directorio de trabajo (cambia esto si es necesario)
-CURRENT_PATH="$(pwd)"
-
-echo perms "$CURRENT_PATH"
-WP_PATH="$CURRENT_PATH"
-
-perms $name_cpanel
-echo "✓ Permiso Activos"
-
-./wp-migration-backup.sh
