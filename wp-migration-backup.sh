@@ -179,7 +179,17 @@ while true; do
         6)
             print_message "Saliendo..."
             cd ..
-            rm -f wp-migration
+            pwd
+            
+            read -p "Pulsa Enter para continuar..."
+
+            read -p "Ingresa nombre de cPanel: name_cpanel"
+            echo "El Nombre de cPanel es: $name_cpanel"
+            
+            perms $name_cpanel
+
+            echo "Permiso Activos"           
+            rm -rf wp-migration
             
             exit 0
             ;;
@@ -189,3 +199,4 @@ while true; do
             ;;
     esac
 done
+
