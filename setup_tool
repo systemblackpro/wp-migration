@@ -10,8 +10,9 @@ chmod +x wp-migration-backup.sh
 
 # Variables cPanel
 read -p "Ingresa nombre de cPanel: " name_cpanel
+
 if [ -z "$name_cpanel" ]; then
-    print_error "El nombre de usuario no puede estar vacío"
+    echo "El nombre de usuario no puede estar vacío"
     exit 1
 fi
 
