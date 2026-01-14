@@ -27,8 +27,9 @@ fi
 
 
 # Variables cPanel
-read -p "Ingresa nombre de cPanel: name_cpanel"
-echo "El Nombre de cPanel es: $name_cpanel"
+read -p "Ingresa nombre de cPanel: " name_cpanel
+echo "Name cPanel es: $name_cpanel"
+
 
 # Directorio de trabajo (cambia esto si es necesario)
 CURRENT_PATH="$(pwd)"
