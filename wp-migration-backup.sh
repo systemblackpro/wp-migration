@@ -28,7 +28,7 @@ fi
 # Directorio de trabajo (cambia esto si es necesario)
 CURRENT_PATH="$(pwd)"
 
-perms   "$CURRENT_PATH" 
+echo perms "$CURRENT_PATH"
 WP_PATH="$CURRENT_PATH"
 
 # Verificar si el directorio de WordPress existe
