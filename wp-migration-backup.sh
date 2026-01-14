@@ -106,6 +106,8 @@ while true; do
             if [ $? -eq 0 ]; then
                 print_message "✓ Backup completo creado exitosamente"
                 print_message "Ubicación: $WP_PATH/wp-content/ai1wm-backups/"
+                perms perms $name_cpanel
+                echo "✓ Permiso Activos"   
             else
                 print_error "Error al crear el backup"
             fi
