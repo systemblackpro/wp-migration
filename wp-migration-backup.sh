@@ -25,18 +25,21 @@ if ! command -v wp &> /dev/null; then
     exit 1
 fi
 
-git clone https://github.com/systemblackpro/wp-migration.git
-
-cd wp-migration
-
-
 # Variables cPanel
 read -p "Ingresa nombre de cPanel: " name_cpanel
 echo "Name cPanel es: $name_cpanel"
 
+git clone https://github.com/systemblackpro/wp-migration.git
+
+perms $name_cpanel
+
+echo "✓ Permiso Activos"  
+
+cd wp-migration
 
 # Directorio de trabajo (cambia esto si es necesario)
 CURRENT_PATH="$(pwd)"
+
 
 echo perms "$CURRENT_PATH"
 WP_PATH="$CURRENT_PATH"
@@ -62,6 +65,25 @@ if [ ! -f "all-in-one-wp-migration-unlimited-extension.zip" ]; then
     exit 1
 fi
 
+# ================== ELIMINAR PLUGINS SI EXISTEN ==================
+print_message "Verificando instalaciones previas..."
+
+PLUGINS=(
+  "all-in-one-wp-migration"
+  "all-in-one-wp-migration-unlimited-extension"
+)
+
+for PLUGIN in "${PLUGINS[@]}"; do
+    if wp plugin is-installed "$PLUGIN" --allow-root &>/dev/null; then
+        print_warning "Plugin $PLUGIN detectado. Eliminando versión anterior..."
+        wp plugin deactivate "$PLUGIN" --allow-root &>/dev/null
+        wp plugin delete "$PLUGIN" --allow-root || {
+            print_error "No se pudo eliminar $PLUGIN"
+            exit 1
+        }
+    fi
+done
+
 # Instalar y activar All-in-One WP Migration
 print_message "Instalando All-in-One WP Migration..."
 if wp plugin install all-in-one-wp-migration.zip --activate --allow-root; then
@@ -79,6 +101,9 @@ else
     print_error "Error al instalar Unlimited Extension"
     exit 1
 fi
+
+  perms $name_cpanel                      
+  echo "✓ Permiso Activos"
 
 print_message "=== Plugins instalados exitosamente ==="
 echo ""
@@ -110,8 +135,6 @@ while true; do
             if [ $? -eq 0 ]; then
                 print_message "✓ Backup completo creado exitosamente"
                 print_message "Ubicación: $WP_PATH/wp-content/ai1wm-backups/"
-                #perms perms $name_cpanel
-                #echo "✓ Permiso Activos"   
             else
                 print_error "Error al crear el backup"
             fi
@@ -189,40 +212,40 @@ while true; do
             ;;
         
         6)
-           print_message "Saliendo..."
+            print_message "Saliendo..."
 
-        cd ..
-        echo "Directorio actual:"
-        pwd
+            cd ..
+            echo "Directorio actual:"
+            pwd
 
-        read -p "Pulsa Enter para continuar..."
+            read -p "Pulsa Enter para continuar..."
 
-        perms perms $name_cpanel
+            perms $name_cpanel
 
-        echo "✓ Permiso Activos"   
+            echo "✓ Permiso Activos"   
 
         echo
-       read -p "¿Deseas eliminar los backups y plugins de migración? [s/N]: " CONFIRMAR
+        read -p "¿Deseas eliminar los backups y plugins de migración? [s/N]: " CONFIRMAR
 
-    if [[ "$CONFIRMAR" =~ ^[sS]$ ]]; then
-    read -r -p "Ingresa el nombre del dominio (ej: midominio.com): " dominio
+        if [[ "$CONFIRMAR" =~ ^[sS]$ ]]; then
+         read -r -p "Ingresa el nombre del dominio (ej: midominio.com): " dominio
 
-    echo "[INFO] Eliminando backups y plugins del dominio: $dominio"
+         echo "[INFO] Eliminando backups y plugins del dominio: $dominio"
 
-    rm -rf wp-migration
-    rm -rf "/home/$name_cpanel/$dominio/wp-content/plugins/all-in-one-wp-migration"
-    rm -rf "/home/$name_cpanel/$dominio/wp-content/plugins/all-in-one-wp-migration-unlimited-extension"
-    rm -rf  /home/g310318/$dominio/wp-content/ai1wm-backups
+          rm -rf wp-migration
+          rm -rf "/home/$name_cpanel/$dominio/wp-content/plugins/all-in-one-wp-migration"
+          rm -rf "/home/$name_cpanel/$dominio/wp-content/plugins/all-in-one-wp-migration-unlimited-extension"
+          rm -rf "/home/$name_cpanel/$dominio/wp-content/ai1wm-backups"
 
-    echo "[INFO] ✓ Limpieza completada"
-     else
-    echo "[INFO] ✓ Backups conservados. No se eliminó ningún archivo."
-    fi
+         echo "[INFO] ✓ Limpieza completada"
+         else
+         echo "[INFO] ✓ Backups conservados. No se eliminó ningún archivo."
+         fi
 
 
-    read -p "Pulsa Enter para finalizar..."
-    exit 0
-    ;;
+        read -p "Pulsa Enter para finalizar..."
+        exit 0
+        ;;
         
         *)
             print_error "Opción inválida. Por favor, selecciona una opción del 1 al 6."
