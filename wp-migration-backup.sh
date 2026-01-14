@@ -188,8 +188,7 @@ while true; do
             
             read -p "Pulsa Enter para continuar..."
 
-            read -p "Ingresa nombre de cPanel: name_cpanel"
-            echo "El Nombre de cPanel es: $name_cpanel"
+            
             
             perms $name_cpanel
 
