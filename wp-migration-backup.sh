@@ -198,17 +198,21 @@ while true; do
         echo
        read -p "¿Deseas eliminar los backups y plugins de migración? [s/N]: " CONFIRMAR
 
-     if [[ "$CONFIRMAR" =~ ^[sS]$ ]]; then
-        echo "[INFO] Eliminando backups y plugins..."
+    if [[ "$CONFIRMAR" =~ ^[sS]$ ]]; then
+    read -r -p "Ingresa el nombre del dominio (ej: midominio.com): " dominio
 
-        rm -rf wp-migration
-        rm -rf /home/g310318/historiesdecastello.com/wp-content/plugins/all-in-one-wp-migration
-        rm -rf /home/g310318/historiesdecastello.com/wp-content/plugins/all-in-one-wp-migration-unlimited-extension
+    echo "[INFO] Eliminando backups y plugins del dominio: $dominio"
 
-         echo "[INFO] ✓  Limpieza completada"
-    else
-         echo "[INFO] ✓  Backups conservados. No se eliminó ningún archivo."
+    rm -rf wp-migration
+    rm -rf "/home/$name_cpanel/$dominio/wp-content/plugins/all-in-one-wp-migration"
+    rm -rf "/home/$name_cpanel/$dominio/wp-content/plugins/all-in-one-wp-migration-unlimited-extension"
+    rm -rf  /home/g310318/$dominio/wp-content/ai1wm-backups
+
+    echo "[INFO] ✓ Limpieza completada"
+     else
+    echo "[INFO] ✓ Backups conservados. No se eliminó ningún archivo."
     fi
+
 
     read -p "Pulsa Enter para finalizar..."
     exit 0
