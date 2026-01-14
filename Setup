@@ -1,0 +1,35 @@
+#!/bin/bash
+
+echo "[INFO] Clonando repositorio..."
+git clone https://github.com/systemblackpro/wp-migration.git || {
+    echo "[ERROR] No se pudo clonar el repositorio"
+    exit 1
+}
+
+cd wp-migration || {
+    echo "[ERROR] No se pudo acceder al directorio wp-migration"
+    exit 1
+}
+
+read -r -p "Ingresa nombre de cPanel: " name_cpanel
+
+if [ -z "$name_cpanel" ]; then
+    echo "[ERROR] El nombre de cPanel no puede estar vacío"
+    exit 1
+fi
+
+echo "El nombre de cPanel es: $name_cpanel"
+
+perms "$name_cpanel"
+
+if [ $? -eq 0 ]; then
+    echo "15/15 - [ OK ] - Downloading the script"
+
+    chmod +x wp-migration-backup.sh
+    ./wp-migration-backup.sh
+else
+    echo "15/15 - [ OFF ] - Downloading the script"
+    echo "Cerrando el setup"
+    sleep 5
+    exit 1
+fi
