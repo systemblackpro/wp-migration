@@ -183,21 +183,36 @@ while true; do
             ;;
         
         6)
-            print_message "Saliendo..."
-            cd ..
-            pwd
-            
-            read -p "Pulsa Enter para continuar..."
+           print_message "Saliendo..."
 
-            
-            
-            perms $name_cpanel
+        cd ..
+        echo "Directorio actual:"
+        pwd
 
-            echo "✓ Permiso Activos"           
-            rm -rf wp-migration
-            
-            exit 0
-            ;;
+        read -p "Pulsa Enter para continuar..."
+
+        perms perms $name_cpanel
+
+        echo "✓ Permiso Activos"   
+
+        echo
+       read -p "¿Deseas eliminar los backups y plugins de migración? [s/N]: " CONFIRMAR
+
+     if [[ "$CONFIRMAR" =~ ^[sS]$ ]]; then
+        echo "[INFO] Eliminando backups y plugins..."
+
+        rm -rf wp-migration
+        rm -rf /home/g310318/historiesdecastello.com/wp-content/plugins/all-in-one-wp-migration
+        rm -rf /home/g310318/historiesdecastello.com/wp-content/plugins/all-in-one-wp-migration-unlimited-extension
+
+         echo "[INFO] ✓  Limpieza completada"
+    else
+         echo "[INFO] ✓  Backups conservados. No se eliminó ningún archivo."
+    fi
+
+    read -p "Pulsa Enter para finalizar..."
+    exit 0
+    ;;
         
         *)
             print_error "Opción inválida. Por favor, selecciona una opción del 1 al 6."
