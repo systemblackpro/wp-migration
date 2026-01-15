@@ -32,7 +32,7 @@ echo "Name cPanel es: $name_cpanel"
 # Directorio de trabajo (cambia esto si es necesario)
 CURRENT_PATH="$(pwd)"
 
-echo perms "$CURRENT_PATH"
+perms "$CURRENT_PATH"
 WP_PATH="$CURRENT_PATH"
 
 # Verificar si el directorio de WordPress existe
