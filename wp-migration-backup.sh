@@ -165,7 +165,7 @@ while true; do
             print_message "Listando backups existentes..."
             echo ""
             echo "--- Backups de All-in-One WP Migration ---"
-            if [ -d "/wp-content/ai1wm-backups" ]; then
+            if [ -d "/home/$name_cpanel/$domonio/wp-content/ai1wm-backups" ]; then
                 ls -lh "/wp-content/ai1wm-backups/"
             else
                 print_warning "No se encontraron backups de All-in-One WP Migration"
