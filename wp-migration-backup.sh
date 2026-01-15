@@ -1,173 +1,246 @@
 #!/bin/bash
 
-# ========================================================================
-# WordPress Migration Tool - Instalador Rápido
-# Ejecutar con: curl -fsSL https://raw.githubusercontent.com/.../install.sh | bash
-# ========================================================================
-
+# Colores para mensajes
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m'
+NC='\033[0m' # Sin color
 
+# Función para mostrar mensajes
 print_message() {
-    echo -e "${GREEN}[✓]${NC} $1"
+    echo -e "${GREEN}[INFO]${NC} $1"
 }
 
 print_error() {
-    echo -e "${RED}[✗]${NC} $1"
+    echo -e "${RED}[ERROR]${NC} $1"
 }
 
 print_warning() {
-    echo -e "${YELLOW}[!]${NC} $1"
-}
-
-print_header() {
-    clear
-    echo -e "${BLUE}"
-    echo "╔══════════════════════════════════════════════════════════╗"
-    echo "║     WordPress Migration Tool - Instalador Automático    ║"
-    echo "║              All-in-One WP Migration Setup               ║"
-    echo "╚══════════════════════════════════════════════════════════╝"
-    echo -e "${NC}"
+    echo -e "${YELLOW}[ADVERTENCIA]${NC} $1"
 }
 
 # Verificar si WP-CLI está instalado
-check_wpcli() {
-    if ! command -v wp &> /dev/null; then
-        print_warning "WP-CLI no detectado. Instalando..."
-        
-        curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar 2>/dev/null
-        chmod +x wp-cli.phar
-        
-        if [ -w "/usr/local/bin" ]; then
-            mv wp-cli.phar /usr/local/bin/wp
-            print_message "WP-CLI instalado en /usr/local/bin/wp"
-        else
-            sudo mv wp-cli.phar /usr/local/bin/wp 2>/dev/null || {
-                mv wp-cli.phar ./wp
-                print_warning "WP-CLI instalado localmente como ./wp"
-            }
-        fi
-    else
-        print_message "WP-CLI ya está instalado"
-    fi
-}
+if ! command -v wp &> /dev/null; then
+    print_error "WP-CLI no está instalado. Por favor, instálalo primero."
+    exit 1
+fi
 
-# Función principal
-main() {
-    print_header
-    
-    # Detectar si estamos ejecutando desde curl o localmente
-    if [ -t 0 ]; then
-        # Ejecución local (con terminal interactiva)
-        INTERACTIVE=true
-    else
-        # Ejecución desde curl (sin interacción)
-        INTERACTIVE=false
-    fi
-    
-    print_message "Iniciando instalación..."
-    echo ""
-    
-    # Verificar Git
-    if ! command -v git &> /dev/null; then
-        print_error "Git no está instalado. Por favor, instala Git primero."
-        exit 1
-    fi
-    
-    # Clonar repositorio
-    print_message "Descargando WordPress Migration Tool..."
-    
-    if [ -d "wp-migration" ]; then
-        print_warning "Directorio wp-migration ya existe. Eliminando..."
-        rm -rf wp-migration
-    fi
-    
-    if git clone https://github.com/systemblackpro/wp-migration.git 2>/dev/null; then
-        print_message "Repositorio clonado exitosamente"
-    else
-        print_error "Error al clonar el repositorio"
-        print_message "Intenta manualmente: git clone https://github.com/systemblackpro/wp-migration.git"
-        exit 1
-    fi
-    
-    cd wp-migration || {
-        print_error "No se pudo acceder al directorio wp-migration"
-        exit 1
-    }
-    
-    # Dar permisos de ejecución
-    chmod +x *.sh 2>/dev/null
-    
-    print_message "Scripts configurados correctamente"
-    echo ""
-    
-    # Verificar WP-CLI
-    check_wpcli
-    echo ""
-    
-    # Mostrar información final
-    echo -e "${BLUE}╔══════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${BLUE}║              Instalación Completada ✓                    ║${NC}"
-    echo -e "${BLUE}╚══════════════════════════════════════════════════════════╝${NC}"
-    echo ""
-    print_message "Ubicación: $(pwd)"
-    echo ""
-    echo "📋 Archivos disponibles:"
-    ls -1 *.sh 2>/dev/null | sed 's/^/   /'
-    echo ""
-    
-    if [ "$INTERACTIVE" = true ]; then
-        # Modo interactivo
-        echo -e "${YELLOW}¿Qué deseas hacer ahora?${NC}"
-        echo ""
-        echo "1) Ejecutar el script de migración completo"
-        echo "2) Solo instalar los plugins"
-        echo "3) Salir (configurar manualmente después)"
-        echo ""
-        read -p "Selecciona una opción [1-3]: " choice
-        
-        case $choice in
-            1)
-                if [ -f "wp-migration-backup.sh" ]; then
-                    echo ""
-                    print_message "Ejecutando script de migración..."
-                    echo ""
-                    ./wp-migration-backup.sh
-                else
-                    print_error "Script wp-migration-backup.sh no encontrado"
-                fi
-                ;;
-            2)
-                if [ -f "install-plugins.sh" ]; then
-                    ./install-plugins.sh
-                else
-                    print_warning "Script install-plugins.sh no encontrado"
-                    print_message "Ejecuta manualmente: ./wp-migration-backup.sh"
-                fi
-                ;;
-            3)
-                print_message "Configuración guardada. Ejecuta cuando estés listo:"
-                ;;
-        esac
-    else
-        # Modo no interactivo (desde curl)
-        print_warning "Ejecutado desde curl - modo no interactivo"
-    fi
-    
-    echo ""
-    echo -e "${GREEN}Próximos pasos:${NC}"
-    echo ""
-    echo "  cd wp-migration"
-    echo "  ./wp-migration-backup.sh"
-    echo ""
-    echo -e "${BLUE}O ejecuta directamente:${NC}"
-    echo ""
-    echo "  cd wp-migration && ./wp-migration-backup.sh"
-    echo ""
-}
+# Variables cPanel
+read -p "Ingresa nombre de cPanel: " name_cpanel
+echo "Name cPanel es: $name_cpanel"
 
-# Ejecutar
-main
+# Directorio de trabajo (cambia esto si es necesario)
+CURRENT_PATH="$(pwd)"
+
+echo perms "$CURRENT_PATH"
+WP_PATH="$CURRENT_PATH"
+
+# Verificar si el directorio de WordPress existe
+if [ ! -d "$WP_PATH" ]; then
+    print_error "El directorio de WordPress no existe: $WP_PATH"
+    exit 1
+fi
+
+cd "$WP_PATH" || exit 1
+
+print_message "=== Instalación de Plugins All-in-One WP Migration ==="
+
+# Verificar si los archivos .zip existen
+if [ ! -f "all-in-one-wp-migration.zip" ]; then
+    print_error "No se encuentra el archivo all-in-one-wp-migration.zip en $WP_PATH"
+    exit 1
+fi
+
+if [ ! -f "all-in-one-wp-migration-unlimited-extension.zip" ]; then
+    print_error "No se encuentra el archivo all-in-one-wp-migration-unlimited-extension.zip en $WP_PATH"
+    exit 1
+fi
+
+# ================== ELIMINAR PLUGINS SI EXISTEN ==================
+print_message "Verificando instalaciones previas..."
+
+PLUGINS=(
+  "all-in-one-wp-migration"
+  "all-in-one-wp-migration-unlimited-extension"
+)
+
+for PLUGIN in "${PLUGINS[@]}"; do
+    if wp plugin is-installed "$PLUGIN" --allow-root &>/dev/null; then
+        print_warning "Plugin $PLUGIN detectado. Eliminando versión anterior..."
+        wp plugin deactivate "$PLUGIN" --allow-root &>/dev/null
+        wp plugin delete "$PLUGIN" --allow-root || {
+            print_error "No se pudo eliminar $PLUGIN"
+            exit 1
+        }
+    fi
+done
+
+# Instalar y activar All-in-One WP Migration
+print_message "Instalando All-in-One WP Migration..."
+if wp plugin install all-in-one-wp-migration.zip --activate --allow-root; then
+    print_message "✓ All-in-One WP Migration instalado y activado correctamente"
+else
+    print_error "Error al instalar All-in-One WP Migration"
+    exit 1
+fi
+
+# Instalar y activar la extensión Unlimited
+print_message "Instalando All-in-One WP Migration Unlimited Extension..."
+if wp plugin install all-in-one-wp-migration-unlimited-extension.zip --activate --allow-root; then
+    print_message "✓ Unlimited Extension instalada y activada correctamente"
+else
+    print_error "Error al instalar Unlimited Extension"
+    exit 1
+fi
+
+  perms $name_cpanel                      
+  echo "✓ Permiso Activos"
+
+print_message "=== Plugins instalados exitosamente ==="
+echo ""
+
+# Menú de opciones para backup
+while true; do
+    echo ""
+    echo "=== OPCIONES DE BACKUP ==="
+    echo "1) Crear backup completo"
+    echo "2) Crear backup de base de datos solamente"
+    echo "3) Crear backup de archivos solamente"
+    echo "4) Listar backups existentes"
+    echo "5) Exportar backup a archivo"
+    echo "6) Salir"
+    echo ""
+    read -p "Selecciona una opción [1-6]: " option
+
+    case $option in
+        1)
+            print_message "Creando backup completo..."
+            BACKUP_NAME="backup-completo-$(date +%Y%m%d-%H%M%S).wpress"
+            
+            # Crear directorio de backups si no existe
+            mkdir -p "$WP_PATH/wp-content/ai1wm-backups"
+            
+            # Exportar backup completo
+            wp ai1wm backup --allow-root
+            
+            if [ $? -eq 0 ]; then
+                print_message "✓ Backup completo creado exitosamente"
+                print_message "Ubicación: $WP_PATH/wp-content/ai1wm-backups/"
+            else
+                print_error "Error al crear el backup"
+            fi
+            ;;
+        
+        2)
+            print_message "Creando backup de base de datos..."
+            wp db export "$WP_PATH/backup-db-$(date +%Y%m%d-%H%M%S).sql" --allow-root
+            
+            if [ $? -eq 0 ]; then
+                print_message "✓ Backup de base de datos creado"
+            else
+                print_error "Error al crear backup de base de datos"
+            fi
+            ;;
+        
+        3)
+            print_message "Creando backup de archivos..."
+            BACKUP_DIR="$WP_PATH/backups-archivos"
+            mkdir -p "$BACKUP_DIR"
+            BACKUP_FILE="$BACKUP_DIR/archivos-$(date +%Y%m%d-%H%M%S).tar.gz"
+            
+            tar -czf "$BACKUP_FILE" --exclude="$BACKUP_DIR" -C "$WP_PATH" .
+            
+            if [ $? -eq 0 ]; then
+                print_message "✓ Backup de archivos creado: $BACKUP_FILE"
+            else
+                print_error "Error al crear backup de archivos"
+            fi
+            ;;
+        
+        4)
+            print_message "Listando backups existentes..."
+            echo ""
+            echo "--- Backups de All-in-One WP Migration ---"
+            if [ -d "/wp-content/ai1wm-backups" ]; then
+                ls -lh "/wp-content/ai1wm-backups/"
+            else
+                print_warning "No se encontraron backups de All-in-One WP Migration"
+            fi
+            
+            echo ""
+            echo "--- Backups de base de datos ---"
+            ls -lh "$WP_PATH"/backup-db-*.sql 2>/dev/null || print_warning "No se encontraron backups de base de datos"
+            
+            echo ""
+            echo "--- Backups de archivos ---"
+            if [ -d "$WP_PATH/backups-archivos" ]; then
+                ls -lh "$WP_PATH/backups-archivos/"
+            else
+                print_warning "No se encontraron backups de archivos"
+            fi
+            ;;
+        
+        5)
+            print_message "Exportando backup usando All-in-One WP Migration..."
+            read -p "¿Incluir base de datos? (s/n): " include_db
+            read -p "¿Incluir archivos multimedia? (s/n): " include_media
+            read -p "¿Incluir temas? (s/n): " include_themes
+            read -p "¿Incluir plugins? (s/n): " include_plugins
+            
+            EXPORT_OPTS=""
+            [[ "$include_db" == "n" ]] && EXPORT_OPTS="$EXPORT_OPTS --exclude-database"
+            [[ "$include_media" == "n" ]] && EXPORT_OPTS="$EXPORT_OPTS --exclude-media"
+            [[ "$include_themes" == "n" ]] && EXPORT_OPTS="$EXPORT_OPTS --exclude-themes"
+            [[ "$include_plugins" == "n" ]] && EXPORT_OPTS="$EXPORT_OPTS --exclude-plugins"
+            
+            wp ai1wm backup $EXPORT_OPTS --allow-root
+            
+            if [ $? -eq 0 ]; then
+                print_message "✓ Exportación completada"
+            else
+                print_error "Error durante la exportación"
+            fi
+            ;;
+        
+        6)
+            print_message "Saliendo..."
+
+            cd ..
+            echo "Directorio actual:"
+            pwd
+
+            read -p "Pulsa Enter para continuar..."
+
+            perms $name_cpanel
+
+            echo "✓ Permiso Activos"   
+
+        echo
+        read -p "¿Deseas eliminar los backups y plugins de migración? [s/N]: " CONFIRMAR
+
+        if [[ "$CONFIRMAR" =~ ^[sS]$ ]]; then
+         read -r -p "Ingresa el nombre del dominio (ej: midominio.com): " dominio
+
+         echo "[INFO] Eliminando backups y plugins del dominio: $dominio"
+
+          rm -rf wp-migration
+          rm -rf "/home/$name_cpanel/$dominio/wp-content/plugins/all-in-one-wp-migration"
+          rm -rf "/home/$name_cpanel/$dominio/wp-content/plugins/all-in-one-wp-migration-unlimited-extension"
+          rm -rf "/home/$name_cpanel/$dominio/wp-content/ai1wm-backups"
+
+         echo "[INFO] ✓ Limpieza completada"
+         else
+         echo "[INFO] ✓ Backups conservados. No se eliminó ningún archivo."
+         fi
+
+
+        read -p "Pulsa Enter para finalizar..."
+        exit 0
+        ;;
+        
+        *)
+            print_error "Opción inválida. Por favor, selecciona una opción del 1 al 6."
+            ;;
+    esac
+done
+
