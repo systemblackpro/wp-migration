@@ -33,7 +33,10 @@ echo "Name cPanel es: $name_cpanel"
 CURRENT_PATH="$(pwd)"
 
 perms "$CURRENT_PATH"
-perms "$name_cpanel"
+# perms "$name_cpanel"
+chmod -R 755 /home/$CPANEL_USER/$DOMAIN
+chown -R $CPANEL_USER:$CPANEL_USER /home/$CPANEL_USER/$DOMAIN
+
 WP_PATH="$CURRENT_PATH"
 
 # Verificar si el directorio de WordPress existe
@@ -216,7 +219,10 @@ while true; do
 
             read -p "Pulsa Enter para continuar..."
 
-            perms $name_cpanel
+            # perms $name_cpanel
+            chmod -R 755 /home/$CPANEL_USER/$DOMAIN
+            chown -R $CPANEL_USER:$CPANEL_USER /home/$CPANEL_USER/$DOMAIN
+
 
             echo "✓ Permiso Activos"   
 
