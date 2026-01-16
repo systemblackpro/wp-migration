@@ -27,7 +27,7 @@ print_header() {
     clear
     echo -e "${BLUE}"
     echo "╔══════════════════════════════════════════════════════════╗"
-    echo "║     WordPress Migration Tool - Instalador Automático    ║"
+    echo "║     BlackPro Migration Tool - Instalador Automático    ║"
     echo "║              All-in-One WP Migration Setup               ║"
     echo "╚══════════════════════════════════════════════════════════╝"
     echo -e "${NC}"
