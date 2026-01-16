@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ========================================================================
-# WordPress Migration Tool - Instalador Rápido
+# BlackPro Migration Tool - Instalador Rápido
 # Ejecutar con: curl -fsSL https://raw.githubusercontent.com/.../install.sh | bash
 # ========================================================================
 
