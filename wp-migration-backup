@@ -33,9 +33,9 @@ echo "Name cPanel es: $name_cpanel"
 CURRENT_PATH="$(pwd)"
 
 perms "$CURRENT_PATH"
-# perms "$name_cpanel"
-chmod -R 755 /home/$CPANEL_USER/$DOMAIN
-chown -R $CPANEL_USER:$CPANEL_USER /home/$CPANEL_USER/$DOMAIN
+# perms
+chmod -R 755 /home/"$name_cpanel"
+chown -R  "$name_cpanel"
 
 WP_PATH="$CURRENT_PATH"
 
@@ -220,8 +220,8 @@ while true; do
             read -p "Pulsa Enter para continuar..."
 
             # perms $name_cpanel
-            chmod -R 755 /home/$CPANEL_USER/$DOMAIN
-            chown -R $CPANEL_USER:$CPANEL_USER /home/$CPANEL_USER/$DOMAIN
+            chmod -R 755 /home/"$name_cpanel"
+            chown -R  "$name_cpanel"
 
 
             echo "✓ Permiso Activos"   
