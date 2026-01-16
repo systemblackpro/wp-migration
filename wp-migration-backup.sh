@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# ========================================================================
+# BlackPro Migration Tool - Instalador Rápido
+# Ejecutar con: curl -fsSL https://raw.githubusercontent.com/.../install.sh | bash
+# ========================================================================
+
 # Colores para mensajes
 RED='\033[0;31m'
 GREEN='\033[0;32m'
