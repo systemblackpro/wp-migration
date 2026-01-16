@@ -1,14 +1,5 @@
 #!/bin/bash
 
-cd "$FULL_PATH/wp-migration"
-
-# Descargar plugins si no existen
-[ ! -f all-in-one-wp-migration.zip ] && \
-    curl -LO https://github.com/systemblackpro/wp-migration/raw/main/all-in-one-wp-migration.zip
-
-[ ! -f all-in-one-wp-migration-unlimited-extension.zip ] && \
-    curl -LO https://github.com/systemblackpro/wp-migration/raw/main/all-in-one-wp-migration-unlimited-extension.zip
-
 # Colores para mensajes
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -35,23 +26,14 @@ if ! command -v wp &> /dev/null; then
 fi
 
 # Variables cPanel
-read -p "Ingresa nombre de cPanel: " CPANEL_USER
-echo "Usuario cPanel es: $CPANEL_USER"
-
-read -p "Ingresa nombre del Dominio: " DOMINIO
-echo "El Nombre de Dominio es: $DOMINIO"
-
-chmod -R 755 /home/$CPANEL_USER/$DOMAIN
-chown -R $CPANEL_USER:$CPANEL_USER /home/$CPANEL_USER/$DOMAIN
-
+read -p "Ingresa nombre de cPanel: " name_cpanel
+echo "Name cPanel es: $name_cpanel"
 
 # Directorio de trabajo (cambia esto si es necesario)
 CURRENT_PATH="$(pwd)"
 
-"$CURRENT_PATH"
-# perms
-
-
+perms "$CURRENT_PATH"
+perms "$name_cpanel"
 WP_PATH="$CURRENT_PATH"
 
 # Verificar si el directorio de WordPress existe
@@ -234,9 +216,7 @@ while true; do
 
             read -p "Pulsa Enter para continuar..."
 
-            # perms $CPANEL_USER
-            
-
+            perms $name_cpanel
 
             echo "✓ Permiso Activos"   
 
@@ -249,9 +229,9 @@ while true; do
          echo "[INFO] Eliminando backups y plugins del dominio: $dominio"
 
           rm -rf wp-migration
-          rm -rf "/home/$CPANEL_USER/$DOMINIO/wp-content/plugins/all-in-one-wp-migration"
-          rm -rf "/home/$CPANEL_USER/$DOMINIO/wp-content/plugins/all-in-one-wp-migration-unlimited-extension"
-          rm -rf "/home/$CPANEL_USER/$DOMINIO/wp-content/ai1wm-backups"
+          rm -rf "/home/$name_cpanel/$dominio/wp-content/plugins/all-in-one-wp-migration"
+          rm -rf "/home/$name_cpanel/$dominio/wp-content/plugins/all-in-one-wp-migration-unlimited-extension"
+          rm -rf "/home/$name_cpanel/$dominio/wp-content/ai1wm-backups"
 
          echo "[INFO] ✓ Limpieza completada"
          else
