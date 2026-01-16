@@ -1,5 +1,14 @@
 #!/bin/bash
 
+cd "$FULL_PATH/wp-migration"
+
+# Descargar plugins si no existen
+[ ! -f all-in-one-wp-migration.zip ] && \
+    curl -LO https://github.com/systemblackpro/wp-migration/raw/main/all-in-one-wp-migration.zip
+
+[ ! -f all-in-one-wp-migration-unlimited-extension.zip ] && \
+    curl -LO https://github.com/systemblackpro/wp-migration/raw/main/all-in-one-wp-migration-unlimited-extension.zip
+
 # Colores para mensajes
 RED='\033[0;31m'
 GREEN='\033[0;32m'
